@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <Chatbot :top-bottom="options.topBottom" />
+    <Chatbot :options="options" />
   </div>
 </template>
 

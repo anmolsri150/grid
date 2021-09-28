@@ -107,45 +107,44 @@
 </template>
 
 <script>
+const options = {
+  topBottom: "white",
+  userColor: "#333",
+  chatbotMsgColor: "white",
+}
 export default {
-name: "chatbot",
-props:{
-  options: {
-
+  name: "chatbot",
+  props:{
+    options: {
+      type: Object,
+      default: null,
+    },
   },
-  topBottom:{
-    type:String,
-    default:"white",
-  },
-  userColor:{
-    type:String,
-    default:"#333",
-  },
-  chatbotMsgColor:{
-    type:String,
-    default:"white",
-  },
-
-
-
-},
-computed: {
-  baseOptions(){
+  data(){
     return{
-      '--bg-color': this.topBottom,
-      '--user':this.userColor,
-      '--chatbot-msg':this.chatbotMsgColor,
+      currentOptions: {},
     }
-  }
-},
-methods: {
+  },
+  mounted () {
+    this.currentOptions = options
+    console.log(this.options)
+    Object.keys(this.options).forEach((key) => {
+      console.log(key)
+      this.currentOptions[key] = this.options[key]
+    })
+  },
+  computed: {
+    baseOptions(){
+      return{
+        '--bg-color': this.currentOptions.topBottom,
+        '--user':this.currentOptions.userColor,
+        '--chatbot-msg':this.currentOptions.chatbotMsgColor,
+      }
+    }
+  },
+  methods: {
 
-},
-data(){
-  return{
-
-  }
-},
+  },
 }
 </script>
 

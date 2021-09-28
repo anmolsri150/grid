@@ -18,9 +18,9 @@
         </div>
       </div>
       <div class="contact">
-        <div class="pic stark"></div>
+        <div class="pic chatbot"></div>
         <div class="name">
-          Tony Stark
+          Tony chatbot
         </div>
         <div class="message">
           Uh, he's from space, he came here to steal a necklace from a wizard.
@@ -59,15 +59,15 @@
           Carol Danvers
         </div>
         <div class="message">
-          Hey Peter Parker, you got something for me?
+          Hey Peter user, you got something for me?
         </div>
       </div>
     </div>
-    <div class="chat">
+    <div class="chat" :style="baseOptions">
       <div class="contact bar">
-        <div class="pic stark"></div>
+        <div class="pic chatbot"></div>
         <div class="name">
-          Tony Stark
+          Tony chatbot
         </div>
         <div class="seen">
           Today at 12:56
@@ -77,22 +77,22 @@
         <div class="time">
           Today at 11:41
         </div>
-        <div class="message parker">
-          Hey, man! What's up, Mr Stark?👋
+        <div class="message user">
+          Hey, man! What's up, Mr chatbot?👋
         </div>
-        <div class="message stark">
+        <div class="message chatbot">
           Kid, where'd you come from?
         </div>
-        <div class="message parker">
+        <div class="message user">
           Field trip! 🤣
         </div>
-        <div class="message parker">
-          Uh, what is this guy's problem, Mr. Stark? 🤔
+        <div class="message user">
+          Uh, what is this guy's problem, Mr. chatbot? 🤔
         </div>
-        <div class="message stark">
+        <div class="message chatbot">
           Uh, he's from space, he came here to steal a necklace from a wizard.
         </div>
-        <div class="message stark">
+        <div class="message chatbot">
           <div class="typing typing-1"></div>
           <div class="typing typing-2"></div>
           <div class="typing typing-3"></div>
@@ -108,7 +108,44 @@
 
 <script>
 export default {
-  name: "chatbot"
+name: "chatbot",
+props:{
+  options: {
+
+  },
+  topBottom:{
+    type:String,
+    default:"white",
+  },
+  userColor:{
+    type:String,
+    default:"#333",
+  },
+  chatbotMsgColor:{
+    type:String,
+    default:"white",
+  },
+
+
+
+},
+computed: {
+  baseOptions(){
+    return{
+      '--bg-color': this.topBottom,
+      '--user':this.userColor,
+      '--chatbot-msg':this.chatbotMsgColor,
+    }
+  }
+},
+methods: {
+
+},
+data(){
+  return{
+
+  }
+},
 }
 </script>
 
@@ -226,7 +263,7 @@ body, html {
   z-index: 2;
   box-sizing: border-box;
   border-radius: 1rem;
-  background: white;
+  background: var(--bg-color);
   box-shadow: 0 0 8rem 0 rgba(0, 0, 0, 0.1), 0rem 2rem 4rem -3rem rgba(0, 0, 0, 0.5);
 }
 .chat .contact.bar {
@@ -257,7 +294,7 @@ body, html {
   box-sizing: border-box;
   padding: 0.5rem 1rem;
   margin: 1rem;
-  background: #FFF;
+  background: var(--chatbot-msg);
   border-radius: 1.125rem 1.125rem 1.125rem 0;
   min-height: 2.25rem;
   width: -webkit-fit-content;
@@ -266,10 +303,10 @@ body, html {
   max-width: 66%;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
 }
-.chat .messages .message.parker {
+.chat .messages .message.user {
   margin: 1rem 1rem 1rem auto;
   border-radius: 1.125rem 1.125rem 0 1.125rem;
-  background: #333;
+  background: var(--user);
   color: white;
 }
 .chat .messages .message .typing {
@@ -349,7 +386,7 @@ body, html {
     opacity: 1;
   }
 }
-.pic.stark {
+.pic.chatbot {
   background-image: url("https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/7/73/SMH_Mentor_6.png");
 }
 
@@ -362,7 +399,7 @@ body, html {
 }
 
 .pic.danvers {
-  background-image: url("https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/0/05/HeyPeterParker.png");
+  background-image: url("https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/0/05/HeyPeteruser.png");
 }
 
 .pic.rogers {

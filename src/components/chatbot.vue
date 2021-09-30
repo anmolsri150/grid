@@ -135,10 +135,18 @@ export default {
       type: Object,
       default: null,
     },
+    meta: {
+      type: Object,
+      default: null,
+    }
   },
   data(){
     return{
       currentOptions: {},
+      metadata: {},
+      current: -1,
+      currentControl: -1,
+      formData: {},
     }
   },
   mounted () {
@@ -148,6 +156,48 @@ export default {
       console.log(key)
       this.currentOptions[key] = this.options[key]
     })
+    this.intialize()
+  },
+  methods: {
+    intialize() {
+      this.meta.forEach((meta) => {
+        this.formData[meta.name] = null
+        this.metadata[meta.id] = {
+          next: null,
+          callbacks: null,
+          ...meta,
+        }
+      })
+      this.next()
+    },
+    submit() {
+      this.$emit('submit', this.formData)
+    },
+    next() {
+      const vm = this
+      if (this.currentControl === -1) {
+        this.currentControl = 0
+      } else {
+        this.currentControl = this.metadata[this.currentControl].next
+      }
+      if (this.metadata[this.currentControl].callbacks && this.metadata[this.currentControl].callbacks.getValues !== undefined) {
+        this.metadata[this.currentControl].callbacks.getValues(this.formData).then((res) => {
+          vm.metadata[vm.currentControl].values = res;
+          vm.current = vm.currentControl
+        }).catch((err) => {
+          console.error(err)
+          if (vm.metadata[vm.currentControl].callbacks && vm.metadata[vm.currentControl].callbacks.onError !== undefined) {
+            vm.metadata[vm.currentControl].callbacks.onError(err, vm.metadata[vm.current])
+          }
+        })
+      } else {
+        this.current = this.currentControl
+      }
+    },
+    submitCurrent(val) {
+      this.formData[this.metadata[this.current].name] = val
+      this.next()
+    },
   },
   computed: {
     baseOptions(){
@@ -159,9 +209,6 @@ export default {
         '--input-radius':this.currentOptions.inputRadius+ 'rem',
       }
     }
-  },
-  methods: {
-
   },
 }
 </script>

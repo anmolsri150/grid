@@ -3,63 +3,19 @@
     <div class="contacts">
       <i class="fas fa-bars fa-2x"></i>
       <h2>
-        Stages
+        Responses
       </h2>
-      <div class="contact">
-        <div class="pic rogers"></div>
-        <div class="badge">
-          14
-        </div>
-        <div class="name">
-          Steve Rogers
-        </div>
-        <div class="message">
-          That is America's ass 🇺🇸🍑
-        </div>
-      </div>
-      <div class="contact">
-        <div class="pic chatbot"></div>
-        <div class="name">
-          Tony chatbot
-        </div>
-        <div class="message">
-          Uh, he's from space, he came here to steal a necklace from a wizard.
-        </div>
-      </div>
-      <div class="contact">
-        <div class="pic banner"></div>
-        <div class="badge">
-          1
-        </div>
-        <div class="name">
-          Bruce Banner
-        </div>
-        <div class="message">
-          There's an Ant-Man *and* a Spider-Man?
-        </div>
-      </div>
-      <div class="contact">
-        <div class="pic thor"></div>
-        <div class="name">
-          Thor Odinson
-        </div>
-        <div class="badge">
-          3
-        </div>
-        <div class="message">
-          I like this one
-        </div>
-      </div>
-      <div class="contact">
-        <div class="pic danvers"></div>
-        <div class="badge">
-          2
-        </div>
-        <div class="name">
-          Carol Danvers
-        </div>
-        <div class="message">
-          Hey Peter user, you got something for me?
+      <div style="overflow-y: scroll; height: 90%">
+        <div class="contact" v-for="(x, i) in qa" :key="x" @click="navigateTo(x.id)">
+          <div class="badge">
+            {{ i + 1 }}
+          </div>
+          <div class="name">
+            {{ x.question }}
+          </div>
+          <div class="message">
+            {{ x.answer }}
+          </div>
         </div>
       </div>
     </div>
@@ -73,48 +29,46 @@
       </div>
       <div class="messages" id="chat">
         <div class="time">
-          Today at 11:41
+          Today
         </div>
-        <div class="message user">
-          Hey, man! What's up, Mr chatbot?👋
-        </div>
-<!--        <div class="message chatbot">-->
-<!--          Kid, where'd you come from?-->
-<!--        </div>-->
-<!--        <div class="message user">-->
-<!--          Field trip! 🤣-->
-<!--        </div>-->
-<!--        <div class="message user">-->
-<!--          Uh, what is this guy's problem, Mr. chatbot? 🤔-->
-<!--        </div>-->
-<!--        <div class="message chatbot">-->
-<!--          Uh, he's from space, he came here to steal a necklace from a wizard.-->
-<!--        </div>-->
-<!--        <div class="message chatbot">-->
-<!--          Uh, he's from space, he came here to steal a necklace from a wizard.-->
-<!--        </div>-->
-<!--        <div class="message chatbot">-->
-<!--          Uh, he's from space, he came here to steal a necklace from a wizard.-->
-<!--        </div>-->
-        <div class="message chatbot" v-if="loading">
-          <div class="typing typing-1"></div>
-          <div class="typing typing-2"></div>
-          <div class="typing typing-3"></div>
-        </div>
-        <div v-else-if="current!=null  &&  metadata[current]!=null">
-            {{metadata[current].text}}
-        </div>
+        <template v-for="x in messages">
+          <div v-if="x.type === 'answer'" class="message user" :id="x.id" :key="x.id">
+            {{ x.text }}
+          </div>
+          <div v-else class="message chatbot" :id="x.id" :key="x.id">
+            {{ x.text }}
+          </div>
+        </template>
+        <template v-if="current !== -1">
+          <div class="message chatbot" v-if="loading">
+            <div class="typing typing-1"></div>
+            <div class="typing typing-2"></div>
+            <div class="typing typing-3"></div>
+          </div>
+          <div class="message chatbot" v-else-if="current !== null && metadata[current] !== null">
+            {{ metadata[current].text }}
+          </div>
+        </template>
       </div>
-      <div v-if="current!=null  &&  metadata[current]!=null"
-      >
-        <div class="input" v-if="metadata[current].type=='text' " >
-          <input placeholder="Type here!" type="text" v-model="textInput" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="fa fa-paper-plane"></i></button></div>
+      <template v-if="loading === false && current !== -1">
+        <div v-if="current !== null && metadata[current] !== null">
+          <div class="input" v-if="metadata[current].type === 'text'" >
+            <input placeholder="Type here!" type="text" v-model="textInput" v-on:keyup.enter="submitCurrent(textInput)"/><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="far fa-paper-plane"></i></button></div>
+          </div>
+          <div class="input" v-if="metadata[current].type === 'single'" >
+            <div class="Buttons" v-for="x in metadata[current].values" :key="x.key"> <button class="btn btn2" @click="submitCurrent(x.value)">{{ x.value }}</button></div>
+          </div>
+          <div class="input" v-if="metadata[current].type === 'bool'">
+            <div class="Buttons"> <button class="btn btn2" @click="submitCurrent(true)">Yes</button></div><div class="Buttons"> <button class="btn btn2" @click="submitCurrent(false)">No</button></div>
+          </div>
+  <!--        <div class="input" >-->
+  <!--          <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>-->
+  <!--        </div>-->
         </div>
-        <div class="input" v-if="metadata[current].type=='single'" >
-          <div class="Buttons" v-for="x in metadata[current].values" :key="x"> <button class="btn btn2" @click="submitCurrent(x.value)">{{ x.value }}</button></div>
-        </div>
-        <div class="input" v-if="metadata[current].type=='bool'">
-          <div class="Buttons"> <button class="btn btn2" @click="submitCurrent(true)">Yes</button></div><div class="Buttons"> <button class="btn btn2" @click="submitCurrent(false)">No</button></div>
+        <div v-else>
+          <div class="input" >
+            <div class="Buttons"> <button class="btn btn2" @click="submit">Submit</button></div>
+          </div>
         </div>
         <div class="input" v-if="metadata[current].type=='upload'">
           <input placeholder="Upload your file!" type="file" id="fileUpload" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="chooseFiles"><i class="fa fa-upload" style="padding-right: 5px"></i> Upload</button></div>
@@ -135,6 +89,7 @@
 
 
 
+      </template>
     </div>
   </div>
 
@@ -165,7 +120,7 @@ export default {
       default: null,
     },
     meta: {
-      type: Object,
+      type: Array,
       default: null,
     }
   },
@@ -174,26 +129,23 @@ export default {
       loading: true,
       textInput: '',
       currentOptions: {},
-      metadata: [{
-        type:'datepicker'
-      }],
+      metadata: {},
       current: 0,
       currentControl: -1,
       formData: {},
+      messages: [],
+      qa: [],
     }
   },
   mounted () {
     this.currentOptions = options
-    console.log(this.options)
     Object.keys(this.options).forEach((key) => {
-      console.log(key)
       this.currentOptions[key] = this.options[key]
     })
-    this.heading=true,
-    this.intialize()
+    this.initialize()
   },
   methods: {
-    intialize() {
+    initialize() {
       this.meta.forEach((meta) => {
         this.formData[meta.name] = null
         this.metadata[meta.id] = {
@@ -206,36 +158,90 @@ export default {
     },
     submit() {
       this.$emit('submit', this.formData)
+      this.current = -1
     },
     next() {
+      this.loading = true
       const vm = this
-      if (this.currentControl === -1) {
-        this.currentControl = 0
-      } else {
-        this.currentControl = this.metadata[this.currentControl].next
-      }
-      if (this.metadata[this.currentControl].callbacks && this.metadata[this.currentControl].callbacks.getValues !== undefined) {
-        this.metadata[this.currentControl].callbacks.getValues(this.formData).then((res) => {
-          vm.metadata[vm.currentControl].values = res;
-          vm.current = vm.currentControl
-        }).catch((err) => {
-          console.error(err)
-          if (vm.metadata[vm.currentControl].callbacks && vm.metadata[vm.currentControl].callbacks.onError !== undefined) {
-            vm.metadata[vm.currentControl].callbacks.onError(err, vm.metadata[vm.current])
+      setTimeout(() => {
+        if (this.currentControl === -1) {
+          this.currentControl = 0
+        } else {
+          this.currentControl = this.metadata[this.currentControl].next
+        }
+        if (this.currentControl === null) {
+          this.current = null
+        } else {
+          if (this.metadata[this.currentControl].callbacks !== undefined && this.metadata[this.currentControl].callbacks) {
+            if (this.metadata[this.currentControl].callbacks.getValues !== undefined) {
+              this.metadata[this.currentControl].callbacks.getValues(this.formData).then((res) => {
+                vm.metadata[vm.currentControl].values = res;
+                vm.current = vm.currentControl
+              }).catch((err) => {
+                console.error(err)
+                if (vm.metadata[vm.currentControl].callbacks && vm.metadata[vm.currentControl].callbacks.onError !== undefined) {
+                  vm.metadata[vm.currentControl].callbacks.onError(err, vm.metadata[vm.current])
+                }
+              })
+            }
+            if (this.metadata[this.currentControl].text === undefined || this.metadata[this.currentControl].text === null || this.metadata[this.currentControl].text === '') {
+              if (this.metadata[this.currentControl].callbacks.getText !== undefined) {
+                this.metadata[this.currentControl].callbacks.getText(this.formData).then((res) => {
+                  vm.metadata[vm.currentControl].text = res;
+                }).catch((err) => {
+                  console.error(err)
+                  vm.metadata[vm.currentControl].text = "Please enter text for field " + vm.metadata[vm.currentControl].name
+                })
+              } else {
+                if(vm.metadata[vm.currentControl].name === 'name') {
+                  vm.metadata[vm.currentControl].text = "What is your name?"
+                } else if(vm.metadata[vm.currentControl].name === 'appointment_time') {
+                  vm.metadata[vm.currentControl].text = "What time would you like the appointment to be Scheduled?"
+                } else if(vm.metadata[vm.currentControl].name === 'rating') {
+                  vm.metadata[vm.currentControl].text = "Don't forget to give a rating."
+                } else {
+                  vm.metadata[vm.currentControl].text = "Please enter text for field " + vm.metadata[vm.currentControl].name
+                }
+              }
+            }
+            vm.current = this.currentControl
+            this.loading = false
+          } else {
+            vm.current = this.currentControl
+            this.loading = false
           }
-        })
-      } else {
-        this.current = this.currentControl
-      }
+        }
+        this.loading = false
+      }, 1200);
     },
     submitCurrent(val) {
       this.formData[this.metadata[this.current].name] = val
+      this.textInput = ''
+      this.qa.push({
+        question: this.metadata[this.current].text,
+        answer: val,
+        id: 'question-' + this.metadata[this.current].id,
+      })
+      this.messages.push({
+        type: 'question',
+        text: this.metadata[this.current].text,
+        id: 'question-' + this.metadata[this.current].id
+      })
+      this.messages.push({
+        type: 'answer',
+        text: val,
+        id: 'answer-' + this.metadata[this.current].id
+      })
+      this.loading = true
       this.next()
     },
     chooseFiles() {
       document.getElementById("fileUpload").click()
     },
 
+    navigateTo(id) {
+      document.getElementById(id).scrollIntoView();
+    },
   },
   computed: {
     baseOptions(){
@@ -333,16 +339,16 @@ body, html {
 .contact .badge {
   box-sizing: border-box;
   position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 4rem;
+  height: 4rem;
   text-align: center;
-  font-size: 0.9rem;
-  padding-top: 0.125rem;
-  border-radius: 1rem;
+  font-size: 1.5rem;
+  padding-top: 1.25rem;
+  border-radius: 3rem;
   top: 0;
-  left: 2.5rem;
-  background: #333;
-  color: white;
+  left: 0rem;
+  background: #ffe5b4;
+  color: black;
 }
 
 .contacts {

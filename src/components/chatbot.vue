@@ -51,13 +51,16 @@
             {{ metadata[current].text }}
           </div>
         </template>
+        <div class="message chatbot" v-else-if="finalMessage !== undefined && finalMessage">
+          {{ finalMessageText }}
+        </div>
       </div>
       <template v-if="loading === false && current !== -1">
         <div v-if="current !== null && metadata[current] !== null">
-          <div class="input" v-if="metadata[current].type === 'text'" >
+          <div class="input" v-if="metadata[current].type === 'text'">
             <input placeholder="Type here!" type="text" v-model="textInput" v-on:keyup.enter="submitCurrent(textInput)"/><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="far fa-paper-plane"></i></button></div>
           </div>
-          <div class="input" v-if="metadata[current].type === 'single'" >
+          <div class="input" v-if="metadata[current].type === 'single'">
             <div class="Buttons" v-for="x in metadata[current].values" :key="x.key"> <button class="btn btn2" @click="submitCurrent(x.value)">{{ x.value }}</button></div>
           </div>
           <div class="input" v-if="metadata[current].type === 'bool'">
@@ -83,9 +86,9 @@ const options = {
   topBottom: "white",
   userColor: "#333",
   chatbotMsgColor: "white",
-  glassMorphed:false,
+  glassMorphed: false,
   position: "center",
-  inputRadius:"1"
+  inputRadius: "1"
 }
 export default {
   name: "chatbot",
@@ -97,6 +100,9 @@ export default {
     meta: {
       type: Array,
       default: null,
+    },
+    finalMessage: {
+      type: Function
     }
   },
   data(){
@@ -110,6 +116,7 @@ export default {
       formData: {},
       messages: [],
       qa: [],
+      finalMessageText: ''
     }
   },
   mounted () {
@@ -130,6 +137,9 @@ export default {
         }
       })
       this.next()
+      this.finalMessage(this.formData).then(value => {
+        this.finalMessageText = value
+      })
     },
     submit() {
       this.$emit('submit', this.formData)
@@ -182,6 +192,17 @@ export default {
             vm.current = this.currentControl
             this.loading = false
           } else {
+            if (this.metadata[this.currentControl].text === undefined || this.metadata[this.currentControl].text === null || this.metadata[this.currentControl].text === '') {
+              if(vm.metadata[vm.currentControl].name === 'name') {
+                vm.metadata[vm.currentControl].text = "What is your name?"
+              } else if(vm.metadata[vm.currentControl].name === 'appointment_time') {
+                vm.metadata[vm.currentControl].text = "What time would you like the appointment to be Scheduled?"
+              } else if(vm.metadata[vm.currentControl].name === 'rating') {
+                vm.metadata[vm.currentControl].text = "Don't forget to give a rating."
+              } else {
+                vm.metadata[vm.currentControl].text = "Please enter text for field " + vm.metadata[vm.currentControl].name
+              }
+            }
             vm.current = this.currentControl
             this.loading = false
           }

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <Chatbot :options="options" :meta="meta" @submit="onSubmit" id="hello"/>
+    <Chatbot :options="options" :meta="meta" :finalMessage="finalMessage" @submit="onSubmit" id="hello"/>
   </div>
 </template>
 
@@ -22,51 +22,30 @@ export default {
         inputRadius: "1" ,
         buttonShape:'rounded',
       },
+      finalMessage: function(formData) {
+        // eslint-disable-next-line no-unused-vars
+        return new Promise(function(resolve, reject) {
+          resolve("Alright!, Your Appointment have been scheduled on " + formData.date + " at " + formData.time + " in the " + formData.department + " Department");
+        });
+      },
       meta: [
         {
           type: 'text',
           name: 'name',
           label: 'Name',
-          text: 'What is your name?',
+          text: 'Hey! What do you like to be called?',
           id: 0,
           next: 1,
         },
         {
-          type: 'single',
-          name: 'geek',
-          label: 'Oppai',
-          values: [
-            {
-              key: 'Yes',
-              value: 'yes'
-            },
-            {
-              key: 'No',
-              value: 'no'
-            },
-            {
-              key: 'Yes2',
-              value: 'yes2'
-            },
-            {
-              key: 'No2',
-              value: 'no2'
-            },
-            {
-              key: 'Yes22',
-              value: 'yes22'
-            },
-            {
-              key: 'No22',
-              value: 'no22'
-            },
-          ],
+          type: 'text',
+          name: 'address',
+          label: 'Address',
           callbacks: {
-            getText: function (tt) {
-              console.log(tt)
+            getText: function(formData) {
               // eslint-disable-next-line no-unused-vars
               return new Promise(function(resolve, reject) {
-                resolve('TEST QUESTIOn');
+                resolve("Hey " + formData.name + "!, Where do you live at?");
               });
             }
           },
@@ -75,25 +54,80 @@ export default {
         },
         {
           type: 'text',
-          name: 'address',
-          label: 'Address',
-          text: 'Please enter your address?',
+          name: 'appointment_time',
+          label: 'Appointment Date',
           id: 2,
           next: 3,
         },
         {
-          type: 'text',
-          name: 'address',
-          label: 'Address',
-          text: 'Please enter your address?',
+          type: 'single',
+          name: 'department',
+          label: 'Department',
+          text: 'Which department do you want your appointment to be booked?',
+          values: [
+            {
+              key: 'cardiology',
+              value: 'Cardiology'
+            },
+            {
+              key: 'gastro',
+              value: 'Gastro'
+            },
+            {
+              key: 'ent',
+              value: 'ENT'
+            },
+            {
+              key: 'medicine',
+              value: 'Medicine'
+            },
+          ],
           id: 3,
           next: 4,
         },
         {
-          type: 'text',
-          name: 'address',
-          label: 'Address',
-          text: 'Please enter your address?',
+          type: 'single',
+          name: 'appointment_time',
+          label: 'Appointment Time',
+          text: 'What time do you want the Appointment?',
+          callbacks: {
+            getValues: function() {
+              // eslint-disable-next-line no-unused-vars
+              return new Promise(function(resolve, reject) {
+                let values = [
+                  {
+                    key: '09:00',
+                    value: '09:00'
+                  },
+                  {
+                    key: '10:00',
+                    value: '10:00'
+                  },
+                  {
+                    key: '11:00',
+                    value: '11:00'
+                  },
+                  {
+                    key: '12:00',
+                    value: '12:00'
+                  },
+                  {
+                    key: '15:00',
+                    value: '15:00'
+                  },
+                  {
+                    key: '16:00',
+                    value: '16:00'
+                  },
+                  {
+                    key: '17:00',
+                    value: '17:00'
+                  },
+                ]
+                resolve(values);
+              });
+            }
+          },
           id: 4,
           next: null,
         },

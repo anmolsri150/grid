@@ -98,24 +98,36 @@
         <div class="message chatbot">
           Uh, he's from space, he came here to steal a necklace from a wizard.
         </div>
-        <div class="message chatbot">
+        <div class="message chatbot" v-if="loading">
           <div class="typing typing-1"></div>
           <div class="typing typing-2"></div>
           <div class="typing typing-3"></div>
         </div>
+        <div v-else-if="current!=null  &&  metadata[current]!=null">
+            {{metadata[current].text}}
+        </div>
       </div>
-      <div class="input" >
-       <input placeholder="Type your message here!" type="text" /><div class="Buttons"> <button class="btn btn2" id="input-btn"><i class="far fa-paper-plane"></i></button></div>
+      <div v-if="current!=null  &&  metadata[current]!=null"
+      >
+        <div class="input" v-if="metadata[current].type=='text' " >
+          <input placeholder="Type here!" type="text" v-model="textInput" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="far fa-paper-plane"></i></button></div>
+        </div>
+        <div class="input" v-if="metadata[current].type=='single'" >
+          <div class="Buttons" v-for="x in metadata[current].values" :key="x"> <button class="btn btn2" @click="submitCurrent(x.value)">{{ x.value }}</button></div>
+        </div>
+        <div class="input" v-if="metadata[current].type=='bool'">
+          <div class="Buttons"> <button class="btn btn2" @click="submitCurrent(true)">Yes</button></div><div class="Buttons"> <button class="btn btn2" @click="submitCurrent(false)">No</button></div>
+        </div>
+<!--        <div class="input" >-->
+<!--          <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>-->
+<!--        </div>-->
       </div>
-      <div class="input" >
-        <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
+      <div v-else>
+        <div class="input" >
+          <div class="Buttons"> <button class="btn btn2" @click="submit">Submit</button></div>
+        </div>
       </div>
-      <div class="input" >
-        <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
-      </div>
-      <div class="input" >
-        <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
-      </div>
+
 
 
     </div>
@@ -146,6 +158,8 @@ export default {
   },
   data(){
     return{
+      loading: true,
+      textInput: '',
       currentOptions: {},
       metadata: {},
       current: -1,

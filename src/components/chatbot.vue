@@ -65,13 +65,11 @@
     </div>
     <div class="chat" :class="{glassmorphed:currentOptions.glassMorphed}" :style="baseOptions">
       <div class="contact bar">
-        <div class="pic chatbot"></div>
-        <div class="name">
-          Tony chatbot
+        <div class="chatbot name">
+          <img :src="currentOptions.logoUrl" style="height: 4rem"  class="leftHeading" :class="{centerHeading : currentOptions.logoCenter}" />
+          <span>{{ currentOptions.title }}</span>
         </div>
-        <div class="seen">
-          Today at 12:56
-        </div>
+
       </div>
       <div class="messages" id="chat">
         <div class="time">
@@ -80,24 +78,24 @@
         <div class="message user">
           Hey, man! What's up, Mr chatbot?👋
         </div>
-        <div class="message chatbot">
-          Kid, where'd you come from?
-        </div>
-        <div class="message user">
-          Field trip! 🤣
-        </div>
-        <div class="message user">
-          Uh, what is this guy's problem, Mr. chatbot? 🤔
-        </div>
-        <div class="message chatbot">
-          Uh, he's from space, he came here to steal a necklace from a wizard.
-        </div>
-        <div class="message chatbot">
-          Uh, he's from space, he came here to steal a necklace from a wizard.
-        </div>
-        <div class="message chatbot">
-          Uh, he's from space, he came here to steal a necklace from a wizard.
-        </div>
+<!--        <div class="message chatbot">-->
+<!--          Kid, where'd you come from?-->
+<!--        </div>-->
+<!--        <div class="message user">-->
+<!--          Field trip! 🤣-->
+<!--        </div>-->
+<!--        <div class="message user">-->
+<!--          Uh, what is this guy's problem, Mr. chatbot? 🤔-->
+<!--        </div>-->
+<!--        <div class="message chatbot">-->
+<!--          Uh, he's from space, he came here to steal a necklace from a wizard.-->
+<!--        </div>-->
+<!--        <div class="message chatbot">-->
+<!--          Uh, he's from space, he came here to steal a necklace from a wizard.-->
+<!--        </div>-->
+<!--        <div class="message chatbot">-->
+<!--          Uh, he's from space, he came here to steal a necklace from a wizard.-->
+<!--        </div>-->
         <div class="message chatbot" v-if="loading">
           <div class="typing typing-1"></div>
           <div class="typing typing-2"></div>
@@ -110,7 +108,7 @@
       <div v-if="current!=null  &&  metadata[current]!=null"
       >
         <div class="input" v-if="metadata[current].type=='text' " >
-          <input placeholder="Type here!" type="text" v-model="textInput" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="far fa-paper-plane"></i></button></div>
+          <input placeholder="Type here!" type="text" v-model="textInput" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="fa fa-paper-plane"></i></button></div>
         </div>
         <div class="input" v-if="metadata[current].type=='single'" >
           <div class="Buttons" v-for="x in metadata[current].values" :key="x"> <button class="btn btn2" @click="submitCurrent(x.value)">{{ x.value }}</button></div>
@@ -118,6 +116,13 @@
         <div class="input" v-if="metadata[current].type=='bool'">
           <div class="Buttons"> <button class="btn btn2" @click="submitCurrent(true)">Yes</button></div><div class="Buttons"> <button class="btn btn2" @click="submitCurrent(false)">No</button></div>
         </div>
+        <div class="input" v-if="metadata[current].type=='upload'">
+          <input placeholder="Upload your file!" type="file" id="fileUpload" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="chooseFiles"><i class="fa fa-upload" style="padding-right: 5px"></i> Upload</button></div>
+        </div>
+        <div class="input" v-if="metadata[current].type=='datepicker'">
+          <span style="font-weight: 600;font-size: 1.2rem">Select Date</span><Datepicker style="padding: 1.5rem 1rem; margin: auto"></Datepicker>
+        </div>
+
 <!--        <div class="input" >-->
 <!--          <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>-->
 <!--        </div>-->
@@ -136,16 +141,24 @@
 </template>
 
 <script>
+import Datepicker from 'vuejs-datepicker';
 const options = {
   topBottom: "white",
   userColor: "#333",
   chatbotMsgColor: "white",
   glassMorphed:false,
   position: "center",
-  inputRadius:"1"
+  inputRadius:"1",
+  button: 'primary',
+  logoCenter: false,
+  logoUrl: 'https://www.freepnglogos.com/uploads/flipkart-logo-png/flipkart-inventory-management-system-zap-inventory-1.png',
+  title:'Doctors Appointment',
 }
 export default {
   name: "chatbot",
+  components:{
+    Datepicker
+  },
   props:{
     options: {
       type: Object,
@@ -161,8 +174,10 @@ export default {
       loading: true,
       textInput: '',
       currentOptions: {},
-      metadata: {},
-      current: -1,
+      metadata: [{
+        type:'datepicker'
+      }],
+      current: 0,
       currentControl: -1,
       formData: {},
     }
@@ -174,6 +189,7 @@ export default {
       console.log(key)
       this.currentOptions[key] = this.options[key]
     })
+    this.heading=true,
     this.intialize()
   },
   methods: {
@@ -216,16 +232,31 @@ export default {
       this.formData[this.metadata[this.current].name] = val
       this.next()
     },
+    chooseFiles() {
+      document.getElementById("fileUpload").click()
+    },
+
   },
   computed: {
     baseOptions(){
-      return{
+      let options= {
+
         '--bg-color': this.currentOptions.topBottom,
         '--user':this.currentOptions.userColor,
         '--chatbot-msg':this.currentOptions.chatbotMsgColor,
         '--chatbot':this.currentOptions.position,
         '--input-radius':this.currentOptions.inputRadius+ 'rem',
+
       }
+      switch (this.currentOptions.button){
+        case 'primary': options['--button-radius']= '0rem'; break;
+        case 'rounded': options['--button-radius']= '1rem'; break;
+        case 'pill': options['--button-radius']= '5rem'; break;
+      }
+      if(this.currentOptions.logoCenter){
+        options['--center']='none';
+      }
+      return options;
     }
   },
 }
@@ -255,17 +286,21 @@ body, html {
   bottom: 2rem;
   right: 2rem;
 }
-.bottom-left{
-  position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-}
 .pic {
   width: 4rem;
   height: 4rem;
   background-size: cover;
   background-position: center;
   border-radius: 50%;
+}
+.leftHeading{
+  position: absolute;
+  left:0;
+  top: 0;
+}
+.centerHeading{
+  position: relative;
+  margin:0;
 }
 
 .contact {
@@ -281,9 +316,15 @@ body, html {
   position: absolute;
   left: 0;
 }
+
 .contact .name {
-  font-weight: 500;
+  font-weight: 700;
+  font-size:1.4rem;
+
   margin-bottom: 0.125rem;
+}
+.contact .name span{
+  display:var(--center);
 }
 .contact .message, .contact .seen {
   font-size: 0.9rem;
@@ -368,6 +409,7 @@ body, html {
   padding: 1rem;
   background: #F7F7F7;
   flex-shrink: 2;
+  height: 100%;
   overflow-y: auto;
   box-shadow: inset 0 2rem 2rem -2rem rgba(0, 0, 0, 0.05), inset 0 -2rem 2rem -2rem rgba(0, 0, 0, 0.05);
 }
@@ -519,7 +561,7 @@ body, html {
   border: 2px solid var(--user);
   background: none;
   padding: 15px 20px;
-  border-radius:var(--input-radius) ;
+  border-radius:var(--button-radius) ;
   font-size: 14px;
   font-family: "Segoe UI";
   font-weight: 500;
@@ -556,6 +598,9 @@ body, html {
 }
 .btn2:hover::before{
   height: 180%;
+}
+#fileUpload button{
+  display: none;
 }
 </style>
 

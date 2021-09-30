@@ -2,6 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <Chatbot :options="options" id="hello"/>
+
   </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
         glassMorphed: true,
         userColor:'grey',
         inputRadius: "1" ,
-        buttonShape:'rounded',
+        button:'primary',
       },
 
     }

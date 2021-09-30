@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
     <Chatbot :options="options" :meta="meta" :finalMessage="finalMessage" @submit="onSubmit" id="hello"/>
   </div>
 </template>
@@ -23,6 +22,7 @@ export default {
         button:'primary',
       },
       finalMessage: function(formData) {
+        console.log(formData)
         // eslint-disable-next-line no-unused-vars
         return new Promise(function(resolve, reject) {
           resolve("Alright!, Your Appointment have been scheduled on " + formData.date + " at " + formData.time + " in the " + formData.department + " Department");
@@ -53,7 +53,7 @@ export default {
           next: 2,
         },
         {
-          type: 'text',
+          type: 'datepicker',
           name: 'appointment_time',
           label: 'Appointment Date',
           id: 2,
@@ -87,7 +87,7 @@ export default {
         },
         {
           type: 'single',
-          name: 'appointment_time',
+          name: 'appointment',
           label: 'Appointment Time',
           text: 'What time do you want the Appointment?',
           callbacks: {
@@ -110,18 +110,6 @@ export default {
                   {
                     key: '12:00',
                     value: '12:00'
-                  },
-                  {
-                    key: '15:00',
-                    value: '15:00'
-                  },
-                  {
-                    key: '16:00',
-                    value: '16:00'
-                  },
-                  {
-                    key: '17:00',
-                    value: '17:00'
                   },
                 ]
                 resolve(values);

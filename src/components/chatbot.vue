@@ -50,7 +50,7 @@
           </div>
         </template>
         <div class="message chatbot" v-else-if="finalMessage !== undefined && finalMessage">
-          {{ finalMessageText }}
+          {{ "Alright! Your Appointment have been scheduled on " + formData.appointment_time + " at " + formData.appointment + " in the " + formData.department + " Department" }}
         </div>
       </div>
       <template v-if="loading === false && current !== -1">
@@ -73,25 +73,13 @@
             <div class="Buttons"> <button class="btn btn2" @click="submit">Submit</button></div>
           </div>
         </div>
-        <div class="input" v-if="metadata[current].type=='upload'">
+        <div class="input" v-if="current !== null && metadata[current].type=='upload'">
           <input placeholder="Upload your file!" type="file" id="fileUpload" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="chooseFiles"><i class="fa fa-upload" style="padding-right: 5px"></i> Upload</button></div>
         </div>
-        <div class="input" v-if="metadata[current].type=='datepicker'">
-          <span style="font-weight: 600;font-size: 1.2rem">Select Date</span><Datepicker style="padding: 1.5rem 1rem; margin: auto"></Datepicker>
+        <div class="input" v-if="current !== null && metadata[current].type=='datepicker'">
+          <span style="font-weight: 600;font-size: 1.2rem">Select Date</span><Datepicker format="dd-MMM-yyyy" v-model="textInput" style="padding: 1.5rem 1rem; margin: auto"></Datepicker>
+          <div class="Buttons"> <button class="btn btn2" @click="submitCurrent(textInput)">Submit</button></div>
         </div>
-
-<!--        <div class="input" >-->
-<!--          <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>-->
-<!--        </div>-->
-      </div>
-      <div v-else>
-        <div class="input" >
-          <div class="Buttons"> <button class="btn btn2" @click="submit">Submit</button></div>
-        </div>
-      </div>
-
-
-
       </template>
     </div>
   </div>
@@ -179,9 +167,13 @@ export default {
         } else {
           this.currentControl = this.metadata[this.currentControl].next
         }
+        console.log(this.current)
+        console.log(this.currentControl)
         if (this.currentControl === null) {
           this.current = null
+          this.loading = false
         } else {
+          console.log("SAFs")
           if (this.metadata[this.currentControl].callbacks !== undefined && this.metadata[this.currentControl].callbacks) {
             if (this.metadata[this.currentControl].callbacks.getValues !== undefined) {
               this.metadata[this.currentControl].callbacks.getValues(this.formData).then((res) => {
@@ -237,6 +229,7 @@ export default {
     },
     submitCurrent(val) {
       this.formData[this.metadata[this.current].name] = val
+      console.log(val)
       this.textInput = ''
       this.qa.push({
         question: this.metadata[this.current].text,
@@ -267,7 +260,6 @@ export default {
   computed: {
     baseOptions(){
       let options= {
-
         '--bg-color': this.currentOptions.topBottom,
         '--user':this.currentOptions.userColor,
         '--chatbot-msg':this.currentOptions.chatbotMsgColor,

@@ -18,7 +18,7 @@ export default {
       options: {
         topBottom : 'rgba(58, 58, 58, 0.2)',
         glassMorphed: true,
-        userColor:'blue',
+        userColor:'grey',
         inputRadius: "1" ,
         buttonShape:'rounded',
       },

@@ -105,12 +105,16 @@
         </div>
       </div>
       <div class="input" >
-       <input placeholder="Type your message here!" type="text" style="display: none;"/>
+       <input placeholder="Type your message here!" type="text" /><div class="Buttons"> <button class="btn btn2" id="input-btn"><i class="far fa-paper-plane"></i></button></div>
+      </div>
+      <div class="input" >
         <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
+      </div>
+      <div class="input" >
         <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
+      </div>
+      <div class="input" >
         <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
-
-
       </div>
 
 
@@ -377,14 +381,17 @@ body, html {
   padding: 0 0.5rem 0 1.5rem;
 }
 .chat .input i {
-  font-size: 3rem;
-  margin-right: 1rem;
-  color: #666;
+  font-size: 1.2rem;
+  color:var(--user);
   cursor: pointer;
   transition: color 200ms;
+  padding: -10px;
 }
 .chat .input i:hover {
-  color: #333;
+  color: #fff;
+}
+#input-btn{
+  padding: 10px 15px;
 }
 .chat .input input {
   border: none;
@@ -465,9 +472,13 @@ body, html {
 .btn2{
   color: var(--user);
 }
+.btn2:hover i{
+  color: #fff;
+}
 .btn2:hover{
   color: #fff;
 }
+
 .btn::before{
   content: "";
   position: absolute;

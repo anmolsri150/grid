@@ -21,13 +21,11 @@
     </div>
     <div class="chat" :class="{glassmorphed:currentOptions.glassMorphed}" :style="baseOptions">
       <div class="contact bar">
-        <div class="pic chatbot"></div>
-        <div class="name">
-          Tony chatbot
+        <div class="chatbot name">
+          <img :src="currentOptions.logoUrl" style="height: 4rem"  class="leftHeading" :class="{centerHeading : currentOptions.logoCenter}" />
+          <span>{{ currentOptions.title }}</span>
         </div>
-        <div class="seen">
-          Today at 12:56
-        </div>
+
       </div>
       <div class="messages" id="chat">
         <div class="time">
@@ -75,6 +73,25 @@
             <div class="Buttons"> <button class="btn btn2" @click="submit">Submit</button></div>
           </div>
         </div>
+        <div class="input" v-if="metadata[current].type=='upload'">
+          <input placeholder="Upload your file!" type="file" id="fileUpload" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="chooseFiles"><i class="fa fa-upload" style="padding-right: 5px"></i> Upload</button></div>
+        </div>
+        <div class="input" v-if="metadata[current].type=='datepicker'">
+          <span style="font-weight: 600;font-size: 1.2rem">Select Date</span><Datepicker style="padding: 1.5rem 1rem; margin: auto"></Datepicker>
+        </div>
+
+<!--        <div class="input" >-->
+<!--          <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>-->
+<!--        </div>-->
+      </div>
+      <div v-else>
+        <div class="input" >
+          <div class="Buttons"> <button class="btn btn2" @click="submit">Submit</button></div>
+        </div>
+      </div>
+
+
+
       </template>
     </div>
   </div>
@@ -82,16 +99,24 @@
 </template>
 
 <script>
+import Datepicker from 'vuejs-datepicker';
 const options = {
   topBottom: "white",
   userColor: "#333",
   chatbotMsgColor: "white",
   glassMorphed: false,
   position: "center",
-  inputRadius: "1"
+  inputRadius:"1",
+  button: 'primary',
+  logoCenter: false,
+  logoUrl: 'https://www.freepnglogos.com/uploads/flipkart-logo-png/flipkart-inventory-management-system-zap-inventory-1.png',
+  title:'Doctors Appointment',
 }
 export default {
   name: "chatbot",
+  components:{
+    Datepicker
+  },
   props:{
     options: {
       type: Object,
@@ -231,19 +256,34 @@ export default {
       this.loading = true
       this.next()
     },
+    chooseFiles() {
+      document.getElementById("fileUpload").click()
+    },
+
     navigateTo(id) {
       document.getElementById(id).scrollIntoView();
     },
   },
   computed: {
     baseOptions(){
-      return{
+      let options= {
+
         '--bg-color': this.currentOptions.topBottom,
         '--user':this.currentOptions.userColor,
         '--chatbot-msg':this.currentOptions.chatbotMsgColor,
         '--chatbot':this.currentOptions.position,
         '--input-radius':this.currentOptions.inputRadius+ 'rem',
+
       }
+      switch (this.currentOptions.button){
+        case 'primary': options['--button-radius']= '0rem'; break;
+        case 'rounded': options['--button-radius']= '1rem'; break;
+        case 'pill': options['--button-radius']= '5rem'; break;
+      }
+      if(this.currentOptions.logoCenter){
+        options['--center']='none';
+      }
+      return options;
     }
   },
 }
@@ -273,17 +313,21 @@ body, html {
   bottom: 2rem;
   right: 2rem;
 }
-.bottom-left{
-  position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-}
 .pic {
   width: 4rem;
   height: 4rem;
   background-size: cover;
   background-position: center;
   border-radius: 50%;
+}
+.leftHeading{
+  position: absolute;
+  left:0;
+  top: 0;
+}
+.centerHeading{
+  position: relative;
+  margin:0;
 }
 
 .contact {
@@ -299,9 +343,15 @@ body, html {
   position: absolute;
   left: 0;
 }
+
 .contact .name {
-  font-weight: 500;
+  font-weight: 700;
+  font-size:1.4rem;
+
   margin-bottom: 0.125rem;
+}
+.contact .name span{
+  display:var(--center);
 }
 .contact .message, .contact .seen {
   font-size: 0.9rem;
@@ -538,7 +588,7 @@ body, html {
   border: 2px solid var(--user);
   background: none;
   padding: 15px 20px;
-  border-radius:var(--input-radius) ;
+  border-radius:var(--button-radius) ;
   font-size: 14px;
   font-family: "Segoe UI";
   font-weight: 500;
@@ -575,6 +625,9 @@ body, html {
 }
 .btn2:hover::before{
   height: 180%;
+}
+#fileUpload button{
+  display: none;
 }
 </style>
 

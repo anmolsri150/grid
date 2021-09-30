@@ -20,7 +20,7 @@ export default {
         glassMorphed: true,
         userColor:'grey',
         inputRadius: "1" ,
-        buttonShape:'rounded',
+        button:'primary',
       },
       finalMessage: function(formData) {
         // eslint-disable-next-line no-unused-vars

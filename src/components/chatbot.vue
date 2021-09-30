@@ -1,9 +1,9 @@
 <template>
-  <div class="bottom-right">
+  <div :class="currentOptions.position" id="hello">
     <div class="contacts">
       <i class="fas fa-bars fa-2x"></i>
       <h2>
-        Contacts
+        Stages
       </h2>
       <div class="contact">
         <div class="pic rogers"></div>
@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div class="chat" :style="baseOptions">
+    <div class="chat" :class="{glassmorphed:currentOptions.glassMorphed}" :style="baseOptions">
       <div class="contact bar">
         <div class="pic chatbot"></div>
         <div class="name">
@@ -93,14 +93,27 @@
           Uh, he's from space, he came here to steal a necklace from a wizard.
         </div>
         <div class="message chatbot">
+          Uh, he's from space, he came here to steal a necklace from a wizard.
+        </div>
+        <div class="message chatbot">
+          Uh, he's from space, he came here to steal a necklace from a wizard.
+        </div>
+        <div class="message chatbot">
           <div class="typing typing-1"></div>
           <div class="typing typing-2"></div>
           <div class="typing typing-3"></div>
         </div>
       </div>
-      <div class="input">
-        <i class="fas fa-camera"></i><i class="far fa-laugh-beam"></i><input placeholder="Type your message here!" type="text" /><i class="fas fa-microphone"></i>
+      <div class="input" >
+       <input placeholder="Type your message here!" type="text" style="display: none;"/>
+        <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
+        <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
+        <div class="Buttons"> <button class="btn btn2">Hover Me</button></div>
+
+
       </div>
+
+
     </div>
   </div>
 
@@ -111,6 +124,9 @@ const options = {
   topBottom: "white",
   userColor: "#333",
   chatbotMsgColor: "white",
+  glassMorphed:false,
+  position: "center",
+  inputRadius:"1"
 }
 export default {
   name: "chatbot",
@@ -139,6 +155,8 @@ export default {
         '--bg-color': this.currentOptions.topBottom,
         '--user':this.currentOptions.userColor,
         '--chatbot-msg':this.currentOptions.chatbotMsgColor,
+        '--chatbot':this.currentOptions.position,
+        '--input-radius':this.currentOptions.inputRadius+ 'rem',
       }
     }
   },
@@ -151,6 +169,7 @@ export default {
 <style>
 
 @import url("https://fonts.googleapis.com/css?family=Red+Hat+Display:400,500,900&display=swap");
+
 body, html {
   font-family: Red hat Display, sans-serif;
   font-weight: 400;
@@ -163,16 +182,18 @@ body, html {
 .center {
   position: absolute;
   top: 50%;
-  left: calc(50% + 12rem);
+  left: 50%;
   transform: translate(-50%, -50%);
-}
-.bottom-left{
-
 }
 .bottom-right{
   position: absolute;
   bottom: 2rem;
   right: 2rem;
+}
+.bottom-left{
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
 }
 .pic {
   width: 4rem;
@@ -257,13 +278,20 @@ body, html {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 24rem;
+  width: 30rem;
   height: 38rem;
   z-index: 2;
   box-sizing: border-box;
   border-radius: 1rem;
   background: var(--bg-color);
   box-shadow: 0 0 8rem 0 rgba(0, 0, 0, 0.1), 0rem 2rem 4rem -3rem rgba(0, 0, 0, 0.5);
+}
+.glassmorphed{
+  backdrop-filter: blur(10px) saturate(146%);
+  -webkit-backdrop-filter: blur(10px) saturate(146%);
+
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
 }
 .chat .contact.bar {
   flex-basis: 3.5rem;
@@ -277,6 +305,17 @@ body, html {
   flex-shrink: 2;
   overflow-y: auto;
   box-shadow: inset 0 2rem 2rem -2rem rgba(0, 0, 0, 0.05), inset 0 -2rem 2rem -2rem rgba(0, 0, 0, 0.05);
+}
+.chat .messages::-webkit-scrollbar {
+  width: 15px;
+}
+
+
+.chat .messages::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border: 5px solid transparent;
+  background-clip: content-box;
+  background-color: var(--bg-color);
 }
 .chat .messages .time {
   font-size: 0.8rem;
@@ -338,7 +377,7 @@ body, html {
   padding: 0 0.5rem 0 1.5rem;
 }
 .chat .input i {
-  font-size: 1.5rem;
+  font-size: 3rem;
   margin-right: 1rem;
   color: #666;
   cursor: pointer;
@@ -351,9 +390,9 @@ body, html {
   border: none;
   background-image: none;
   background-color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   margin-right: 1rem;
-  border-radius: 1.125rem;
+  border-radius: var(--input-radius);
   flex-grow: 2;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.2);
   font-family: Red hat Display, sans-serif;
@@ -363,6 +402,10 @@ body, html {
 .chat .input input:placeholder {
   color: #999;
 }
+/*.chat .input input:focus{*/
+/*  transition-property: outline;*/
+/*  transition-duration: 4s;*/
+/*}*/
 
 @-webkit-keyframes typing {
   0%, 75%, 100% {
@@ -403,6 +446,44 @@ body, html {
 
 .pic.rogers {
   background-image: url("https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/7/7c/Cap.America_%28We_Don%27t_Trade_Lives_Vision%29.png");
+}
+.btn {
+  border: 2px solid var(--user);
+  background: none;
+  padding: 15px 20px;
+  border-radius:var(--input-radius) ;
+  font-size: 14px;
+  font-family: "Segoe UI";
+  font-weight: 500;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.4s;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.btn2{
+  color: var(--user);
+}
+.btn2:hover{
+  color: #fff;
+}
+.btn::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: var(--user);
+  z-index: -1;
+  transition: 0.4s;
+}
+.btn2::before{
+  bottom: 0;
+  border-radius: 50% 50% 0 0;
+}
+.btn2:hover::before{
+  height: 180%;
 }
 </style>
 

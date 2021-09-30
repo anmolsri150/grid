@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <Chatbot :options="options" />
+    <Chatbot :options="options" id="hello"/>
   </div>
 </template>
 
@@ -16,7 +16,11 @@ export default {
   data(){
     return{
       options: {
-        topBottom : 'black',
+        topBottom : 'rgba(58, 58, 58, 0.2)',
+        glassMorphed: true,
+        userColor:'blue',
+        inputRadius: "1" ,
+        buttonShape:'rounded',
       },
 
     }
@@ -33,4 +37,5 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 </style>

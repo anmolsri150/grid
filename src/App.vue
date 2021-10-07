@@ -15,11 +15,13 @@ export default {
   data(){
     return{
       options: {
-        topBottom : 'rgba(58, 58, 58, 0.2)',
-        glassMorphed: true,
-        userColor:'grey',
-        inputRadius: "1" ,
-        button:'primary',
+        topBottom : 'rgba(255,218,185, 1)',
+        // topBottom : 'rgba(255,218,185, 0.3)',
+        // glassMorphed: true,
+        userColor: '#047BD5',
+        inputRadius: "1",
+        // button: 'pill',
+        button: 'primary',
       },
       finalMessage: function(formData) {
         console.log(formData)
@@ -86,6 +88,21 @@ export default {
           next: 4,
         },
         {
+          type: 'upload',
+          name: 'prescription',
+          label: 'Previous Prescription',
+          callbacks: {
+            uploadFile: function () {
+              // FIle upload logic
+              return new Promise(function (resolve) {
+                resolve(true)
+              })
+            }
+          },
+          id: 4,
+          next: 5,
+        },
+        {
           type: 'single',
           name: 'appointment',
           label: 'Appointment Time',
@@ -116,7 +133,7 @@ export default {
               });
             }
           },
-          id: 4,
+          id: 5,
           next: null,
         },
       ]

@@ -56,7 +56,7 @@
       <template v-if="loading === false && current !== -1">
         <div v-if="current !== null && metadata[current] !== null">
           <div class="input" v-if="metadata[current].type === 'text'">
-            <input placeholder="Type here!" type="text" v-model="textInput" v-on:keyup.enter="submitCurrent(textInput)"/><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="far fa-paper-plane"></i></button></div>
+            <input placeholder="Type here!" type="text" v-model="textInput" v-on:keyup.enter="submitCurrent(textInput)" id="textInput"/><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent(textInput)"><i class="far fa-paper-plane"></i></button></div>
           </div>
           <div class="input" v-if="metadata[current].type === 'single'">
             <div class="Buttons" v-for="x in metadata[current].values" :key="x.key"> <button class="btn btn2" @click="submitCurrent(x.value)">{{ x.value }}</button></div>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="input" v-if="current !== null && metadata[current].type=='upload'">
-          <input placeholder="Upload your file!" type="file" id="fileUpload" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="chooseFiles"><i class="fa fa-upload" style="padding-right: 5px"></i> Upload</button></div>
+          <input placeholder="Upload your file!" type="file" id="fileUpload" /><div class="Buttons"> <button class="btn btn2" id="input-btn" @click="submitCurrent('Team gecko Submission.zip')"><i class="fa fa-upload" style="padding-right: 5px"></i> Upload</button></div>
         </div>
         <div class="input" v-if="current !== null && metadata[current].type=='datepicker'">
           <span style="font-weight: 600;font-size: 1.2rem">Select Date</span><Datepicker format="dd-MMM-yyyy" v-model="textInput" style="padding: 1.5rem 1rem; margin: auto"></Datepicker>
@@ -173,7 +173,6 @@ export default {
           this.current = null
           this.loading = false
         } else {
-          console.log("SAFs")
           if (this.metadata[this.currentControl].callbacks !== undefined && this.metadata[this.currentControl].callbacks) {
             if (this.metadata[this.currentControl].callbacks.getValues !== undefined) {
               this.metadata[this.currentControl].callbacks.getValues(this.formData).then((res) => {
@@ -208,12 +207,15 @@ export default {
             }
             vm.current = this.currentControl
             this.loading = false
+            if (this.metadata[this.currentControl].type === 'text') {
+              document.getElementById("textInput").focus();
+            }
           } else {
             if (this.metadata[this.currentControl].text === undefined || this.metadata[this.currentControl].text === null || this.metadata[this.currentControl].text === '') {
               if(vm.metadata[vm.currentControl].name === 'name') {
                 vm.metadata[vm.currentControl].text = "What is your name?"
               } else if(vm.metadata[vm.currentControl].name === 'appointment_time') {
-                vm.metadata[vm.currentControl].text = "What time would you like the appointment to be Scheduled?"
+                vm.metadata[vm.currentControl].text = "What date would you like the appointment to be Scheduled?"
               } else if(vm.metadata[vm.currentControl].name === 'rating') {
                 vm.metadata[vm.currentControl].text = "Don't forget to give a rating."
               } else {
@@ -222,6 +224,9 @@ export default {
             }
             vm.current = this.currentControl
             this.loading = false
+            if (this.metadata[this.currentControl].type === 'text') {
+              document.getElementById("textInput").focus();
+            }
           }
         }
         this.loading = false
@@ -338,7 +343,7 @@ body, html {
 
 .contact .name {
   font-weight: 700;
-  font-size:1.4rem;
+  font-size:0.9rem;
 
   margin-bottom: 0.125rem;
 }
@@ -346,7 +351,7 @@ body, html {
   display:var(--center);
 }
 .contact .message, .contact .seen {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   color: #999;
 }
 .contact .badge {

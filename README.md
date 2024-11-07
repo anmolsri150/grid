@@ -28,18 +28,18 @@ This chatbot divides the form-filling process into multiple use cases, allowing 
 
 ## Flowchart
 
-![Project Flowchart](./path_to_images/Flowchart.png)
+![Project Flowchart](./path_to_images/Flowchart.jpg)
 
 ## Screenshots
 
 ### Screenshot 1: Date Selection View
-![Screenshot 1](./path_to_images/1.png)
+![Screenshot 1](./path_to_images/1.PNG)
 
 ### Screenshot 2: Dynamic Question Generation Based on Metadata
-![Screenshot 2](./path_to_images/2.png)
+![Screenshot 2](./path_to_images/2.PNG)
 
 ### Screenshot 3: Recalling different parts of the chatbot
-![Screenshot 3](./path_to_images/3.png)
+![Screenshot 3](./path_to_images/3.PNG)
 
 ## Getting Started
 
